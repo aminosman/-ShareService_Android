@@ -1,0 +1,53 @@
+    <com.amin.socialemail.NowLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+   			xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/now"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#e3e3e3"
+        android:orientation="vertical" 
+         android:minWidth="200dp">
+        <FrameLayout 
+            android:id="@+id/mainlayout"
+             android:layout_height="fill_parent" 
+             android:layout_width="wrap_content" 
+             android:orientation="vertical"
+              xmlns:android="http://schemas.android.com/apk/res/android">
+        
+<!--         <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" > -->
+
+<LinearLayout 
+    style="@style/nowCardStyle"
+       android:id="@+id/card"
+    
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/title12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+        <WebView
+            android:id="@+id/web"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+</LinearLayout> 
+    <!-- </RelativeLayout> -->
+<!--             <RelativeLayout
+   			
+            android:id="@+id/settings"
+			android:background="@android:color/transparent"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/hello_world"
+            tools:context=".MainActivity" /> -->
+    </FrameLayout>
+    </com.amin.socialemail.NowLayout>
+    
