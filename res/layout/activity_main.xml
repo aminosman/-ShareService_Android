@@ -16,16 +16,16 @@
          android:id="@+id/mainview"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
-<ScrollView
+<!-- <ScrollView
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-  <RelativeLayout
+    android:layout_height="fill_parent"> -->
+  <ListView
          android:id="@+id/scroll"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
-    </RelativeLayout>   
-    
-</ScrollView>
+    android:layout_height="wrap_content" >
+    </ListView>   
+<!--     
+</ScrollView> -->
 
 </RelativeLayout>
     </RelativeLayout>

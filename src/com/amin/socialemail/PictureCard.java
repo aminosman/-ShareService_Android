@@ -34,6 +34,7 @@ public class PictureCard implements Card{
 	final float screenWidth;
 	final float screenHeight;
 	private String largeUrl;
+	private final String key =System.currentTimeMillis()+"";
 	
 	
 	
@@ -97,12 +98,17 @@ public class PictureCard implements Card{
        
     	holder.image.setImageResource(0);
         if(aq.shouldDelay(position, convertView, parent, this.getUrl())){
-          //  mDialog.show();
+		    holder.image.setBackgroundResource(R.drawable.loading);
 
-        	Debug.out("NO SHOW");
         }
         else{
         	 holder.text.setText(this.getTitle());
+        	 if(MainActivity.cache.containsKey(key)){
+        		    holder.image.setBackgroundResource(0);
+        			holder.image.setImageBitmap(MainActivity.cache.getBitmap(key));
+        			holder.image.getLayoutParams().height = this.height;
+        	 }
+        	 else{
          	aq.id(holder.image).image(this.getUrl(),false, false, (int)(screenWidth), 0, new BitmapAjaxCallback(){
 
     		    @Override
@@ -112,6 +118,7 @@ public class PictureCard implements Card{
     		    }
     		    
     		});
+        	 }
         	 
 
         }
@@ -125,50 +132,66 @@ public class PictureCard implements Card{
 
 	}
 	private void fetch(){
+		int current = 0;
+		MainActivity.myAdapter.images.clear();
+		MainActivity.myAdapter.notifyDataSetChanged();
+		if(main.cache.containsKey(key+current)){
+			
+			while(main.cache.containsKey(key+current)){
+				MainActivity.myAdapter.updateImages(key+current);
+		    	MainActivity.myAdapter.notifyChange();
+		    	current++;
+			}
+			
+		}
+		else{
 		aq.ajax(largeUrl, Bitmap.class, new AjaxCallback<Bitmap>() {
 
 	        @Override
 	        public void callback(String url, Bitmap object, AjaxStatus status) {
-	        	int count = 0;
- 		    	if(object==null && count<3){
-		    		Debug.out("Null BITMAP");
-		    		fetch();
-		    		count++;
-		    	}
-		    	else{
-		    	NewImageView.tileImage(object, main);
-		    	if(MainActivity.scroll.getChildCount()>0){
-		    		for(ImageView x : NewImageView.imageViews){
-		    			ImageSpecs holder = (ImageSpecs) x.getTag();
-						x.getLayoutParams().width = (int) screenWidth;
-						x.getLayoutParams().height = (int) ((float)(screenWidth/holder.width)*holder.height);
-					}
-		    	}
-		    	else{
-		    	LinearLayout tiles = NewImageView.getTiles();
-
-		    	MainActivity.scroll.addView(tiles, 0);
-				for(ImageView x : NewImageView.imageViews){
-	    			ImageSpecs holder = (ImageSpecs) x.getTag();
-					x.getLayoutParams().width = (int) screenWidth;
-					x.getLayoutParams().height = (int) ((float)(screenWidth/holder.width)*holder.height);
-				}
+//	        	int count = 0;
+// 		    	if(object==null && count<3){
+//		    		Debug.out("Null BITMAP");
+//		    		fetch();
+//		    		count++;
+//		    	}
+//		    	else{
+	        	Debug.out("Done Downloading");
+		    	new NewImageView(main, key).execute(object);
+//		    	if(MainActivity.scroll.getChildCount()>0){
+//		    		for(ImageView x : NewImageView.imageViews){
+//		    			ImageSpecs holder = (ImageSpecs) x.getTag();
+//						x.getLayoutParams().width = (int) screenWidth;
+//						x.getLayoutParams().height = (int) ((float)(screenWidth/holder.width)*holder.height);
+//					}
+//		    	}
+//		    	else{
+//		    	LinearLayout tiles = NewImageView.getTiles();
+//
+//		    	MainActivity.scroll.addView(tiles, 0);
+//				for(ImageView x : NewImageView.imageViews){
+//	    			ImageSpecs holder = (ImageSpecs) x.getTag();
+//					x.getLayoutParams().width = (int) screenWidth;
+//					x.getLayoutParams().height = (int) ((float)(screenWidth/holder.width)*holder.height);
+//				}
 //				tiles.getLayoutParams().height = main.getResources().getDisplayMetrics().heightPixels;
 //				tiles.getLayoutParams().width = main.getResources().getDisplayMetrics().widthPixels;
 //		    	TouchImageView zoom = new TouchImageView(main.getApplicationContext(), MainActivity.scroll, NewImageView.imageViews);
 //				MainActivity.scroll.addView(zoom, 1);
 //				zoom.getLayoutParams().height = main.getResources().getDisplayMetrics().heightPixels;
 //				zoom.getLayoutParams().width = main.getResources().getDisplayMetrics().widthPixels;
-		    	}
+//		    	}
 		   	status.invalidate();
-		   	object.recycle();
-			main.memory();
-		    	}
+		   //	object.recycle();
+//			main.memory();
+//		    	}
 	        }
 	});
+		}
 	}
 	
 	public void setImage(Bitmap srcBmp, String url, ImageView img, float height, float width) {
+		
 		
 		float originalHeight = srcBmp.getHeight();
 //		srcBmp =Bitmap.createScaledBitmap (
@@ -204,7 +227,9 @@ public class PictureCard implements Card{
 
         
         
-		if(originalHeight>screenHeight){
+		if(originalHeight>2*screenHeight){
+			
+			
 
 			srcBmp = Bitmap.createBitmap(
 				     srcBmp,
@@ -218,6 +243,16 @@ public class PictureCard implements Card{
 			//image.setImageBitmap(dstBmp);
 		//	dstBmp.recycle();
 		}
+//		else if(originalHeight>.75f*screenHeight){
+//			srcBmp =Bitmap.createScaledBitmap (
+//		     srcBmp,
+//		     (int)(.5f*srcBmp.getWidth()),
+//		     (int)(.5f*srcBmp.getHeight()), 
+//		     false
+//		     );
+//		}
+	    holder.image.setBackgroundResource(0);
+
 		img.setImageBitmap(srcBmp);
 		holder.image.getLayoutParams().height = this.height;
 

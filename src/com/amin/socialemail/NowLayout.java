@@ -24,6 +24,7 @@ public class NowLayout extends LinearLayout implements OnGlobalLayoutListener {
 		setOrientation(LinearLayout.VERTICAL);
 		getViewTreeObserver().addOnGlobalLayoutListener(this);
 	}
+	
 
 	@SuppressWarnings("deprecation")
 	@Override

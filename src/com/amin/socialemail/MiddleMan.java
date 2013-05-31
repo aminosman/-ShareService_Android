@@ -42,8 +42,8 @@ public class MiddleMan {
 
 			if((links.get(index).length()>5)&&(links.get(index).substring(links.get(index).length()-4,links.get(index).length()-3).equals(".") && links.get(index).contains("imgur"))){
 				if(links.get(index).substring(links.get(index).length()-3,links.get(index).length()).equals("gif")){
-				//	Card newCard = (Card) new WebCard(links.get(index) , titles.get(index), index, position, MiddleMan.parent);
-				//	adapter.updateCards(newCard);
+					Card newCard = (Card) new WebCard(links.get(index) , titles.get(index), index, position, MiddleMan.parent);
+					adapter.updateCards(newCard);
 					//   Debug.out("Title: "+titles.get(index)+" at "+index);
 					  //  Debug.out("Link: "+links.get(index)+" at "+index);
 				}
@@ -53,9 +53,9 @@ public class MiddleMan {
 					adapter.updateCards(newCard);
 					Debug.out("Title: "+titles.get(index)+" at "+index);
 					Debug.out("Link: "+links.get(index)+" at "+index);
-					position++;
 
 				}
+				position++;
 
 			}
 

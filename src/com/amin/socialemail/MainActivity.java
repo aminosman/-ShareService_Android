@@ -6,6 +6,8 @@ import java.util.List;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.MemoryInfo;
+import android.content.Context;
+import android.graphics.Bitmap.CompressFormat;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -24,14 +26,22 @@ public class MainActivity extends Activity {
 	private MiddleMan middle;
 	private float width;
 	public RelativeLayout view;
-	public static RelativeLayout scroll;
+	public static LargeImageAdapter myAdapter;
+	public static ListView scroll;
 	public List<ImageView> images;
 	private MemoryInfo mi;
+	public static DiskLruImageCache cache;
 	private ActivityManager activityManager;
 	  @Override
 	  protected void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_main);
+	    
+	    
+	    cache = new DiskLruImageCache( this.getApplicationContext(),"cache", 1024*1024*25,
+	    		CompressFormat.PNG, 70 );
+	    
+	    
 	    aq = new AQuery(this);
 	    PictureCard.ID=0;
 	    MiddleMan.position=0;
@@ -45,8 +55,11 @@ public class MainActivity extends Activity {
 	    
 	    view = (RelativeLayout) findViewById(R.id.mainview);
 			  view.setOnTouchListener(new MainSlideListener(this, view));
-	    scroll = (RelativeLayout) findViewById(R.id.scroll);
-			 
+	    scroll = (ListView) findViewById(R.id.scroll);
+	    myAdapter = new LargeImageAdapter(this);
+	    scroll.setAdapter(myAdapter);
+	    scroll.setDivider(null);
+	    scroll.setDividerHeight(0);
 
 		width= this.getResources().getDisplayMetrics().widthPixels;
 	    view.setBackgroundColor(0xFFEE3333);
@@ -59,6 +72,8 @@ public class MainActivity extends Activity {
 	    MyAdapter adapter = new MyAdapter(this);
 	    listview.setAdapter(adapter);
 	    middle = new MiddleMan(this, adapter);
+	    
+	   
 	    
 	  }
 	  @Override
@@ -114,6 +129,14 @@ Debug.out("CLEANING CLEANING CLEANING");
 	        //note that you can configure the max image cache count, see CONFIGURATION
 	        BitmapAjaxCallback.clearCache();
 	    }
+	  public void change() {
+		  runOnUiThread(new Runnable(){
+		      public void run() {
+		    	  myAdapter.notifyChange();
+		      }
+		   });
+
+		  }
 
 	 
 }
